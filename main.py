@@ -1,5 +1,9 @@
 from Particle import Particle
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import numpy as np
+
+
 
 
 class ParticleSwarm(object):
@@ -21,6 +25,7 @@ class ParticleSwarm(object):
     def run(self, steps):
         
         self.swarm = sorted(self.swarm)
+        self.ThreeDplotParticles(0)
         
         for step in range(steps):
             print("---Itteration " + str(step) + "---")
@@ -39,10 +44,37 @@ class ParticleSwarm(object):
             for particle in self.swarm:     
                 print(particle)
                 
-            self.plotParticles(step)
-                
+            self.ThreeDplotParticles(step+1)
+            
+    def ThreeDplotParticles(self, step):     
+        xlist = []
+        ylist = []
+        zlist = []
+        for particle in self.swarm:
+            posList = particle.getPositionList()
+            xlist.append(posList[0])
+            ylist.append(posList[1])
+            zlist.append(posList[2])
+            
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+
+        ax.scatter(xlist, ylist, zlist, c='b', marker='o')
+        
+        ax.set_xlabel('X Value')
+        ax.set_ylabel('Y Value')
+        ax.set_zlabel('Z Value')
+        
+        ax.set_xlim3d(0, 20)
+        ax.set_ylim3d(0,20)
+        ax.set_zlim3d(0,20)
+                            
+        plt.title("Swarm at Iteration " + str(step))
+        plt.legend(loc='upper right')
+        plt.savefig('image/'+str(step)+'.png') 
+        plt.close()  
          
-    def plotParticles(self, step):     
+    def TwoDplotParticles(self, step):     
         xlist = []
         ylist = []
         for particle in self.swarm:
@@ -68,8 +100,8 @@ class ParticleSwarm(object):
 
 
 def main():
-    swarmSize = 50
-    dimensions = 2
+    swarmSize = 500
+    dimensions = 3
     minVal = 0
     maxVal = 20
     swarm = ParticleSwarm(swarmSize, dimensions, minVal, maxVal)
